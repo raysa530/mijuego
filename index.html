@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#073f34">
+  <meta name="description" content="Alas de Esperanza: una aventura de rescate de aves en el corazón de Iquitos.">
+  <title>Alas de Esperanza · Rescate en Iquitos</title>
+  <style>
+    :root {
+      --forest: #073f34;
+      --forest-2: #0d5c45;
+      --leaf: #1f8a5b;
+      --mint: #bfe8d1;
+      --sky: #dff5f6;
+      --cream: #fffaf0;
+      --paper: #fffdf8;
+      --coral: #ef6f61;
+      --coral-dark: #bb423b;
+      --sun: #f7c64a;
+      --orange: #e68b25;
+      --ink: #153a32;
+      --muted: #5c746d;
+      --line: rgba(21, 58, 50, .15);
+      --shadow: 0 22px 55px rgba(7, 63, 52, .16);
+      --display: "Trebuchet MS", "Arial Rounded MT Bold", Arial, sans-serif;
+      --body: "Segoe UI", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--cream); font-family: var(--body); line-height: 1.6; overflow-x: hidden; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    button { font: inherit; }
+    a, button { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 4px solid var(--sun); outline-offset: 4px; }
+    .wrap { width: min(1180px, calc(100% - 36px)); margin: auto; }
+
+    .skip { position: fixed; top: -80px; left: 18px; z-index: 100; padding: 12px 18px; border-radius: 12px; background: white; font-weight: 900; transition: top .2s ease; }
+    .skip:focus { top: 18px; }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,.16);
+      background: rgba(5, 52, 43, .9);
+      color: white;
+      backdrop-filter: blur(16px);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; color: white; text-decoration: none; }
+    .brand-mark { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50% 50% 50% 15%; background: var(--sun); color: var(--forest); box-shadow: 4px 4px 0 var(--coral); }
+    .brand-mark svg { width: 28px; height: 28px; }
+    .brand strong { display: block; font-family: var(--display); font-size: .98rem; letter-spacing: .03em; line-height: 1.05; }
+    .brand small { display: block; margin-top: 3px; color: rgba(255,255,255,.65); font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+    .nav-links { display: flex; align-items: center; gap: 5px; }
+    .nav-links a { padding: 10px 12px; border-radius: 11px; color: rgba(255,255,255,.83); text-decoration: none; font-size: .91rem; font-weight: 800; transition: .2s ease; }
+    .nav-links a:hover { color: white; background: rgba(255,255,255,.1); transform: translateY(-2px); }
+    .nav-links .play-link { background: var(--coral); color: white; box-shadow: 0 4px 0 var(--coral-dark); }
+    .nav-links .play-link:hover { background: #ff7b6c; }
+    .menu { display: none; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,.3); border-radius: 12px; background: rgba(255,255,255,.08); color: white; cursor: pointer; }
+    .menu svg { width: 24px; }
+
+    .hero {
+      min-height: 820px;
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 140px 0 86px;
+      color: white;
+      background: var(--forest);
+    }
+    .hero::before { content: ""; position: absolute; inset: 0; z-index: -3; background: url("assets/level-1-day-3d-v3.png") center / cover no-repeat; transform: scale(1.02); }
+    .hero::after { content: ""; position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg, rgba(4,47,39,.97) 0%, rgba(4,47,39,.86) 43%, rgba(4,47,39,.28) 72%), linear-gradient(0deg, rgba(4,47,39,.72), transparent 55%); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(380px,.95fr); align-items: end; gap: 46px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; font-size: .78rem; font-weight: 950; letter-spacing: .13em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 38px; height: 4px; border-radius: 99px; background: var(--sun); box-shadow: 8px 7px 0 var(--coral); }
+    .hero h1 { max-width: 760px; margin: 0; font-family: var(--display); font-size: clamp(3rem, 6.4vw, 6.6rem); line-height: .88; letter-spacing: -.065em; text-wrap: balance; text-shadow: 0 8px 28px rgba(0,0,0,.25); }
+    .hero h1 span { display: block; margin-top: 23px; color: var(--sun); font-size: .34em; line-height: 1.12; letter-spacing: .01em; text-transform: uppercase; }
+    .hero-copy { max-width: 660px; margin: 28px 0 0; color: rgba(255,255,255,.88); font-size: clamp(1.02rem, 1.7vw, 1.24rem); font-weight: 650; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 32px; }
+    .btn { min-height: 54px; padding: 0 23px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 2px solid transparent; border-radius: 16px 16px 16px 5px; text-decoration: none; font-weight: 950; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+    .btn svg { width: 21px; height: 21px; }
+    .btn-primary { background: var(--coral); color: white; box-shadow: 7px 7px 0 var(--sun); }
+    .btn-primary:hover { transform: translate(-2px,-2px); box-shadow: 10px 10px 0 var(--sun); background: #ff7c6e; }
+    .btn-secondary { border-color: rgba(255,255,255,.56); background: rgba(255,255,255,.1); color: white; }
+    .btn-secondary:hover { background: rgba(255,255,255,.2); transform: translateY(-2px); }
+    .hero-facts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .fact { padding: 8px 12px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.23); border-radius: 999px; background: rgba(255,255,255,.08); color: rgba(255,255,255,.8); font-size: .82rem; font-weight: 850; backdrop-filter: blur(7px); }
+    .fact svg { width: 17px; height: 17px; color: var(--sun); }
+    .hero-art { position: relative; min-height: 630px; display: flex; justify-content: flex-end; align-items: flex-end; }
+    .hero-art::before { content: ""; position: absolute; width: 470px; height: 470px; right: -12px; bottom: 20px; border: 2px solid rgba(255,255,255,.18); border-radius: 50%; background: rgba(31,138,91,.24); backdrop-filter: blur(4px); }
+    .hero-art::after { content: ""; position: absolute; width: 390px; height: 90px; right: 20px; bottom: -6px; border-radius: 50%; background: rgba(1,28,23,.34); filter: blur(12px); }
+    .hero-art > img { position: relative; z-index: 2; width: min(100%, 550px); max-height: 660px; object-fit: contain; object-position: bottom; filter: drop-shadow(14px 20px 18px rgba(0,0,0,.3)); animation: breathe 4.5s ease-in-out infinite; }
+    .feather { position: absolute; z-index: 3; width: 18px; height: 42px; border-radius: 100% 0 100% 0; background: var(--sun); opacity: .9; animation: drift 5s ease-in-out infinite; }
+    .f1 { top: 85px; left: 10%; transform: rotate(25deg); }
+    .f2 { top: 170px; right: -5px; background: var(--coral); animation-delay: -1.7s; }
+    .f3 { top: 280px; left: -15px; background: var(--mint); animation-delay: -3.1s; }
+    .hero-bottom { position: absolute; z-index: 3; inset: auto 0 0; height: 38px; background: var(--cream); clip-path: polygon(0 40%,4% 80%,8% 45%,12% 75%,16% 42%,20% 75%,24% 48%,28% 80%,32% 43%,36% 74%,40% 45%,44% 80%,48% 42%,52% 76%,56% 48%,60% 78%,64% 42%,68% 76%,72% 46%,76% 79%,80% 42%,84% 76%,88% 45%,92% 80%,96% 42%,100% 72%,100% 100%,0 100%); }
+
+    .section { padding: 108px 0; }
+    .section.alt { background: #e7f5ed; }
+    .section-head { max-width: 790px; margin-bottom: 46px; }
+    .kicker { margin: 0 0 12px; color: var(--leaf); font-size: .78rem; font-weight: 950; letter-spacing: .14em; text-transform: uppercase; }
+    .section h2 { margin: 0; font-family: var(--display); font-size: clamp(2.25rem, 4.8vw, 4.5rem); line-height: 1.02; letter-spacing: -.05em; text-wrap: balance; }
+    .lead { margin: 20px 0 0; color: var(--muted); font-size: 1.1rem; font-weight: 620; }
+
+    .story-grid { display: grid; grid-template-columns: .94fr 1.06fr; gap: 52px; align-items: center; }
+    .story-visual { position: relative; min-height: 600px; overflow: hidden; border: 4px solid var(--forest); border-radius: 42px 42px 42px 10px; background: linear-gradient(145deg,#7dd6d1,#c7edc8); box-shadow: 13px 13px 0 var(--sun); }
+    .story-visual::before { content: ""; position: absolute; inset: 0; background: url("assets/level-1-day-3d-v3.png") center / cover; opacity: .33; }
+    .story-visual img { position: absolute; z-index: 2; left: 50%; bottom: -2%; width: 92%; height: 94%; transform: translateX(-50%); object-fit: contain; object-position: bottom; filter: drop-shadow(15px 19px 16px rgba(0,0,0,.22)); }
+    .story-badge { position: absolute; z-index: 4; left: 22px; right: 22px; bottom: 22px; padding: 18px 20px; border: 2px solid rgba(255,255,255,.55); border-radius: 18px; background: rgba(5,63,52,.89); color: white; backdrop-filter: blur(10px); }
+    .story-badge strong { display: block; color: var(--sun); font-size: .78rem; letter-spacing: .1em; }
+    .story-badge span { display: block; margin-top: 4px; font-weight: 800; }
+    .story-copy > p { color: var(--muted); font-size: 1.07rem; font-weight: 570; }
+    .impact-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 27px; }
+    .impact { padding: 20px; border: 1px solid var(--line); border-radius: 20px 20px 20px 6px; background: white; box-shadow: 0 8px 22px rgba(7,63,52,.07); }
+    .impact svg { width: 29px; height: 29px; color: var(--leaf); }
+    .impact h3 { margin: 11px 0 4px; font-size: 1rem; }
+    .impact p { margin: 0; color: var(--muted); font-size: .9rem; }
+
+    .mission-track { position: relative; display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; }
+    .mission-track::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: repeating-linear-gradient(to bottom,var(--leaf) 0 12px,transparent 12px 22px); opacity: .35; }
+    .mission { position: relative; min-height: 215px; padding: 24px 24px 24px 94px; border: 2px solid var(--line); border-radius: 25px 25px 25px 8px; background: var(--paper); box-shadow: 0 12px 30px rgba(7,63,52,.08); transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+    .mission:hover { transform: translateY(-6px); border-color: var(--mint); box-shadow: 0 20px 38px rgba(7,63,52,.13); }
+    .mission-number { position: absolute; top: 23px; left: 23px; width: 53px; height: 53px; display: grid; place-items: center; border-radius: 15px 15px 15px 5px; background: var(--sun); color: var(--forest); font-family: var(--display); font-size: 1.2rem; font-weight: 950; box-shadow: 4px 4px 0 var(--coral); }
+    .mission small { display: block; color: var(--leaf); font-size: .74rem; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+    .mission h3 { margin: 5px 0 8px; font-family: var(--display); font-size: 1.28rem; line-height: 1.15; }
+    .mission p { margin: 0; color: var(--muted); font-size: .93rem; }
+    .mission-task { display: inline-flex; align-items: center; gap: 7px; margin-top: 15px; padding: 7px 10px; border-radius: 8px; background: #e5f4eb; color: var(--forest-2); font-size: .76rem; font-weight: 900; }
+    .mission-task svg { width: 16px; height: 16px; }
+    .mission:last-child { grid-column: 1 / -1; width: calc(50% - 9px); justify-self: center; }
+
+    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+    .step { position: relative; min-height: 300px; padding: 27px 23px; overflow: hidden; border: 2px solid var(--line); border-radius: 25px 25px 25px 7px; background: white; }
+    .step::after { content: attr(data-step); position: absolute; right: -8px; bottom: -38px; color: rgba(31,138,91,.08); font-family: var(--display); font-size: 9rem; font-weight: 950; line-height: 1; }
+    .step-icon { width: 62px; height: 62px; display: grid; place-items: center; border-radius: 20px 20px 20px 6px; background: var(--forest); color: var(--sun); box-shadow: 5px 5px 0 var(--mint); }
+    .step-icon svg { width: 31px; height: 31px; }
+    .step h3 { position: relative; z-index: 2; margin: 24px 0 8px; font-family: var(--display); font-size: 1.3rem; }
+    .step p { position: relative; z-index: 2; margin: 0; color: var(--muted); font-size: .94rem; }
+    .resources { margin-top: 24px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; }
+    .resource-panel, .controls-panel { padding: 30px; border-radius: 27px 27px 27px 8px; }
+    .resource-panel { border: 3px solid var(--forest); background: var(--forest); color: white; box-shadow: 10px 10px 0 var(--sun); }
+    .resource-panel h3, .controls-panel h3 { margin: 0 0 18px; font-family: var(--display); font-size: 1.35rem; }
+    .resource-list { display: grid; grid-template-columns: repeat(3,1fr); gap: 11px; }
+    .resource { padding: 16px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 15px; background: rgba(255,255,255,.08); text-align: center; }
+    .resource svg { width: 27px; height: 27px; color: var(--sun); }
+    .resource b { display: block; margin-top: 7px; font-size: .82rem; }
+    .controls-panel { border: 2px solid var(--line); background: white; }
+    .keys { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .key { min-height: 58px; padding: 10px 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: 13px; color: var(--muted); font-size: .84rem; font-weight: 800; }
+    kbd { min-width: 37px; padding: 7px 8px; border: 1px solid #a7b9b2; border-bottom-width: 4px; border-radius: 7px; background: #f6faf8; color: var(--forest); font-family: monospace; font-weight: 900; text-align: center; }
+
+    .city-section { position: relative; min-height: 650px; padding: 120px 0; overflow: hidden; display: flex; align-items: center; color: white; background: var(--forest); isolation: isolate; }
+    .city-section::before { content: ""; position: absolute; inset: 0; z-index: -2; background: url("assets/level-2-sunset-3d-v3.png") center / cover no-repeat; }
+    .city-section::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(4,47,39,.92), rgba(4,47,39,.58) 55%, rgba(4,47,39,.15)); }
+    .city-copy { max-width: 670px; padding: 37px; border: 1px solid rgba(255,255,255,.28); border-radius: 28px 28px 28px 8px; background: rgba(5,63,52,.77); backdrop-filter: blur(12px); }
+    .city-copy .kicker { color: var(--sun); }
+    .city-copy h2 { font-size: clamp(2.4rem,5vw,4.8rem); }
+    .city-copy p { margin: 18px 0 0; color: rgba(255,255,255,.8); font-size: 1.07rem; }
+
+    .levels-section { position: relative; overflow: hidden; background: #052f27; color: white; }
+    .levels-section::before { content: ""; position: absolute; width: 580px; height: 580px; top: -250px; right: -210px; border: 100px solid rgba(247,198,74,.05); border-radius: 50%; }
+    .levels-section .kicker { color: var(--sun); }
+    .levels-section .lead { color: rgba(255,255,255,.72); }
+    .level-gallery { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .level-card { position: relative; min-height: 430px; overflow: hidden; display: flex; align-items: flex-end; border: 3px solid rgba(255,255,255,.8); border-radius: 28px 28px 28px 8px; isolation: isolate; box-shadow: 9px 9px 0 rgba(247,198,74,.85); transition: transform .25s ease, box-shadow .25s ease; }
+    .level-card:hover { transform: translateY(-7px); box-shadow: 12px 16px 0 rgba(247,198,74,.85); }
+    .level-card::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--level-image) center / cover no-repeat; transition: transform .45s ease; }
+    .level-card:hover::before { transform: scale(1.04); }
+    .level-card::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg,rgba(3,34,29,.96),rgba(3,34,29,.08) 70%); }
+    .level-day { --level-image: url("assets/level-1-day-3d-v3.png"); }
+    .level-sunset { --level-image: url("assets/level-2-sunset-3d-v3.png"); }
+    .level-night { --level-image: url("assets/level-3-night-3d-v3.png"); }
+    .level-info { width: 100%; padding: 28px 24px 24px; }
+    .level-info span { display: inline-block; padding: 5px 9px; border-radius: 7px; background: var(--sun); color: var(--forest); font-size: .72rem; font-weight: 950; letter-spacing: .08em; }
+    .level-info h3 { margin: 10px 0 5px; font-family: var(--display); font-size: 1.55rem; }
+    .level-info p { margin: 0; color: rgba(255,255,255,.76); font-size: .9rem; }
+    .game-features { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 34px; }
+    .game-feature { padding: 19px; border: 1px solid rgba(255,255,255,.18); border-radius: 17px 17px 17px 5px; background: rgba(255,255,255,.08); backdrop-filter: blur(8px); }
+    .game-feature strong { display: block; color: var(--sun); font-family: var(--display); font-size: 1.08rem; }
+    .game-feature small { display: block; margin-top: 5px; color: rgba(255,255,255,.68); line-height: 1.4; }
+
+    .final { padding: 98px 0; background: var(--sun); }
+    .final-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 36px; padding: 45px; border: 4px solid var(--forest); border-radius: 32px 32px 32px 9px; background: var(--paper); box-shadow: 13px 13px 0 var(--coral); }
+    .final-card h2 { max-width: 780px; }
+    .final-card p { margin: 14px 0 0; color: var(--muted); font-weight: 650; }
+    .final-card .btn { white-space: nowrap; }
+    footer { padding: 36px 0; background: #032b24; color: rgba(255,255,255,.68); }
+    .footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    footer strong { color: white; }
+    footer a { color: var(--sun); text-decoration: none; font-weight: 900; }
+
+    @keyframes breathe { 0%,100% { transform: translateY(0) rotate(-.4deg); } 50% { transform: translateY(-12px) rotate(.4deg); } }
+    @keyframes drift { 0%,100% { translate: 0 0; rotate: -12deg; } 50% { translate: 15px 22px; rotate: 20deg; } }
+    @keyframes pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+
+    @media (max-width: 1020px) {
+      .menu { display: grid; place-items: center; }
+      .nav-links { position: absolute; top: 84px; left: 18px; right: 18px; display: none; flex-direction: column; align-items: stretch; padding: 14px; border: 1px solid rgba(255,255,255,.2); border-radius: 18px; background: #06483a; box-shadow: var(--shadow); }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 13px 15px; }
+      .hero-grid { grid-template-columns: 1fr .72fr; }
+      .hero-art { min-height: 500px; }
+      .story-grid { grid-template-columns: 1fr; }
+      .story-visual { min-height: 650px; }
+      .steps { grid-template-columns: repeat(2,1fr); }
+      .resources { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 740px) {
+      .section { padding: 78px 0; }
+      .brand strong { font-size: .86rem; }
+      .brand small { display: none; }
+      .hero { min-height: auto; padding: 120px 0 68px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: clamp(3rem,16vw,4.6rem); }
+      .hero-actions .btn { width: 100%; }
+      .hero-art { min-height: 450px; justify-content: center; }
+      .hero-art::before { right: 50%; width: 350px; height: 350px; transform: translateX(50%); }
+      .hero-art > img { width: 390px; max-height: 480px; }
+      .story-visual { min-height: 500px; }
+      .impact-grid, .mission-track, .steps { grid-template-columns: 1fr; }
+      .mission-track::before { display: none; }
+      .mission:last-child { grid-column: auto; width: 100%; }
+      .resource-list { grid-template-columns: 1fr; }
+      .keys { grid-template-columns: 1fr; }
+      .city-section { min-height: 720px; padding: 90px 0; background-position: 58% center; }
+      .city-copy { padding: 28px 23px; }
+      .level-gallery, .game-features { grid-template-columns: 1fr; }
+      .level-card { min-height: 360px; }
+      .final-card { grid-template-columns: 1fr; padding: 31px 24px; }
+      .final-card .btn { width: 100%; }
+      .footer { align-items: flex-start; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+
+  <header class="topbar">
+    <nav class="nav wrap" aria-label="Navegación principal">
+      <a class="brand" href="#inicio" aria-label="Volver al inicio">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M3 13c5-1 7-5 9-10 2 5 4 9 9 10-3 1-5 1-7 0v7l-2-2-2 2v-7c-2 1-4 1-7 0Z"/><path d="M10 8h4"/></svg></span>
+        <span><strong>ALAS DE ESPERANZA</strong><small>Rescate de aves · Iquitos</small></span>
+      </a>
+      <button class="menu" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div class="nav-links" id="navLinks">
+        <a href="#historia">Historia</a>
+        <a href="#misiones">Misiones</a>
+        <a href="#como-jugar">Cómo jugar</a>
+        <a href="#iquitos">Iquitos</a>
+        <a class="play-link" href="juego.html">Jugar ahora</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    <section class="hero" id="inicio">
+      <div class="hero-grid wrap">
+        <div>
+          <p class="eyebrow">Una aventura solidaria</p>
+          <h1>Alas de Esperanza <span>Rescate de aves en Iquitos</span></h1>
+          <p class="hero-copy">Explora tres recorridos por una plaza amazónica, supera obstáculos en 3D y ayuda a siete aves que necesitan cuidados distintos. Cada paso puede devolverle el color a sus alas.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#historia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h14v16H5zM9 8h6M9 12h6M9 16h4"/></svg>Conocer la aventura</a>
+            <a class="btn btn-secondary" href="#como-jugar">Aprender a jugar<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></a>
+          </div>
+          <div class="hero-facts">
+            <span class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4zM8 9h8M8 13h8"/></svg>3 niveles</span>
+            <span class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 6-7 10-7 10Z"/></svg>5 vidas</span>
+            <span class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 5 6h-3v5h-4V9H7l5-6ZM7 18h10"/></svg>Doble salto</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <i class="feather f1"></i><i class="feather f2"></i><i class="feather f3"></i>
+          <img src="assets/guardian-rescue-3d.png" alt="">
+        </div>
+      </div>
+      <div class="hero-bottom" aria-hidden="true"></div>
+    </section>
+
+    <section class="section" id="historia">
+      <div class="story-grid wrap">
+        <div class="story-visual">
+          <img src="assets/guardian-rescue-3d.png" alt="La guardiana sostiene con cuidado a un ave rescatada">
+          <div class="story-badge"><strong>LA MISIÓN</strong><span>Observar, proteger y devolver cada ave a un lugar seguro.</span></div>
+        </div>
+        <div class="story-copy">
+          <p class="kicker">Una historia para cuidar</p>
+          <h2>Cuando la plaza pide ayuda, una guardiana responde</h2>
+          <p>Las aves de Iquitos están perdiendo fuerzas. Algunas necesitan agua o alimento; otras requieren un botiquín, un nido, reposo o atención especializada.</p>
+          <p>Tu tarea es caminar con atención, recogerlas con cuidado y dar a cada una exactamente la ayuda que necesita. Mientras avanzas encontrarás suministros, conos, troncos, ramas, plataformas, gatos guardianes y corazones que recuperan una vida.</p>
+          <div class="impact-grid">
+            <article class="impact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3C9 7 6 10 6 14a6 6 0 0 0 12 0c0-4-3-7-6-11Z"/></svg><h3>Cuidados diferentes</h3><p>Cada ave presenta una necesidad particular.</p></article>
+            <article class="impact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 16c5-1 7-5 8-11 2 4 3 7 6 9-3 4-8 6-14 2Z"/></svg><h3>Rescate responsable</h3><p>Acércate con calma y protégela con una manta.</p></article>
+            <article class="impact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V7l8-4 8 4v12l-8 3-8-3Z"/><path d="m4 7 8 4 8-4M12 11v11"/></svg><h3>Aprender jugando</h3><p>Observación, recursos y decisiones en una aventura.</p></article>
+            <article class="impact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-5 7-12a7 7 0 1 0-14 0c0 7 7 12 7 12Z"/><circle cx="12" cy="10" r="2"/></svg><h3>Identidad amazónica</h3><p>La plaza y el ambiente tropical son parte del viaje.</p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="misiones">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">El recorrido de rescate</p>
+          <h2>Siete aves, siete historias que necesitan un buen final</h2>
+          <p class="lead">Cada misión enseña una forma distinta de ayudar. Sigue las señales, conserva tus suministros y completa el recorrido.</p>
+        </div>
+        <div class="mission-track">
+          <article class="mission"><span class="mission-number">01</span><small>Luz · Gorrión amazónico</small><h3>El pajarito agotado</h3><p>Encuentra a Luz, recógela con cuidado y espera mientras recupera sus fuerzas.</p><span class="mission-task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3C9 7 6 10 6 14a6 6 0 0 0 12 0c0-4-3-7-6-11Z"/></svg>Dar agua</span></article>
+          <article class="mission"><span class="mission-number">02</span><small>Sol · Tangara</small><h3>Hambre bajo los árboles</h3><p>Busca el alimento adecuado en la mochila y ayuda a Sol a volver a volar.</p><span class="mission-task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16c0 5-3 8-8 8s-8-3-8-8Z"/><path d="M8 9c1-2 2-3 4-4"/></svg>Dar alimento</span></article>
+          <article class="mission"><span class="mission-number">03</span><small>Verde · Loro joven</small><h3>Alas enredadas</h3><p>Utiliza el botiquín para retirar el hilo sin lastimar sus pequeñas alas.</p><span class="mission-task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 12h6M12 9v6"/></svg>Usar botiquín</span></article>
+          <article class="mission"><span class="mission-number">04</span><small>Chío · Polluelo</small><h3>El polluelo perdido</h3><p>Carga a Chío suavemente y llévalo hasta el árbol con el nido iluminado.</p><span class="mission-task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V8M7 12c-3-1-4-4-3-7 4 0 7 2 8 6M17 13c3-1 4-4 3-7-4 0-7 2-8 6"/></svg>Volver al nido</span></article>
+          <article class="mission"><span class="mission-number">05</span><small>Rubí · Colibrí</small><h3>Golpe en pleno vuelo</h3><p>Traslada a Rubí a una zona tranquila y dale el tiempo que necesita para reposar.</p><span class="mission-task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15c6-1 8-5 9-11 2 4 3 7 7 9-4 5-9 7-16 2Z"/></svg>Llevar a reposo</span></article>
+          <article class="mission"><span class="mission-number">06</span><small>Arco · Guacamayo</small><h3>El ala lastimada</h3><p>Protege a Arco durante el camino y llévalo al puesto de atención de fauna.</p><span class="mission-task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"/><rect x="4" y="4" width="16" height="16" rx="4"/></svg>Buscar atención</span></article>
+          <article class="mission"><span class="mission-number">07</span><small>Amanecer · Ave joven</small><h3>El gran regreso al cielo</h3><p>Llega al jardín de liberación y prepara la última ave para volver a volar en libertad.</p><span class="mission-task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13c5-1 7-5 9-10 2 5 4 9 9 10-3 1-5 1-7 0v7l-2-2-2 2v-7c-2 1-4 1-7 0Z"/></svg>Regresar al cielo</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="como-jugar">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Tu guía de campo</p>
+          <h2>Observa, rescata, cuida y libera</h2>
+          <p class="lead">El juego combina exploración lateral, obstáculos y acciones de cuidado visibles. No todas las aves necesitan lo mismo.</p>
+        </div>
+        <div class="steps">
+          <article class="step" data-step="1"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s7-5 7-12a7 7 0 1 0-14 0c0 7 7 12 7 12Z"/><circle cx="12" cy="10" r="2"/></svg></div><h3>Sigue la señal</h3><p>Camina por la plaza y mantén la mirada en el cielo hasta encontrar el ave de la misión.</p></article>
+          <article class="step" data-step="2"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 16c5-1 7-5 8-11 2 4 3 7 6 9-3 4-8 6-14 2Z"/><path d="M7 19h10"/></svg></div><h3>Recógela</h3><p>Acércate cuando caiga suavemente y pulsa la acción para protegerla con una manta.</p></article>
+          <article class="step" data-step="3"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V7l8-4 8 4v12l-8 3-8-3Z"/><path d="m4 7 8 4 8-4M12 11v11"/></svg></div><h3>Usa el recurso</h3><p>Agua, alimento y botiquines aparecen en la ruta. Recógelos antes de necesitarlos.</p></article>
+          <article class="step" data-step="4"><div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13c5-1 7-5 9-10 2 5 4 9 9 10-3 1-5 1-7 0v7l-2-2-2 2v-7c-2 1-4 1-7 0Z"/></svg></div><h3>Mira su vuelo</h3><p>Completa el cuidado y contempla cómo el ave recupera sus fuerzas para volver al cielo.</p></article>
+        </div>
+        <div class="resources">
+          <div class="resource-panel">
+            <h3>SUMINISTROS DE RESCATE</h3>
+            <div class="resource-list">
+              <div class="resource"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3C9 7 6 10 6 14a6 6 0 0 0 12 0c0-4-3-7-6-11Z"/></svg><b>AGUA</b></div>
+              <div class="resource"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16c0 5-3 8-8 8s-8-3-8-8Z"/><path d="M8 9c1-2 2-3 4-4"/></svg><b>ALIMENTO</b></div>
+              <div class="resource"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 12h6M12 9v6"/></svg><b>BOTIQUÍN</b></div>
+            </div>
+          </div>
+          <div class="controls-panel">
+            <h3>CONTROLES DEL TECLADO</h3>
+            <div class="keys">
+              <div class="key"><span>Caminar</span><span><kbd>A</kbd> <kbd>D</kbd></span></div>
+              <div class="key"><span>Doble salto</span><span><kbd>W</kbd> <kbd>ESP</kbd></span></div>
+              <div class="key"><span>Agacharse</span><span><kbd>S</kbd> <kbd>↓</kbd></span></div>
+              <div class="key"><span>Ayudar</span><span><kbd>E</kbd></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="city-section" id="iquitos">
+      <div class="wrap">
+        <div class="city-copy">
+          <p class="kicker">El corazón del recorrido</p>
+          <h2>Iquitos también es protagonista</h2>
+          <p>La vegetación, el cielo intenso, las palmeras y la arquitectura de la plaza crean un escenario lleno de color. El paisaje amazónico acompaña cada misión y convierte el rescate en una experiencia propia de la ciudad.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section levels-section" id="niveles">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Tres momentos de una misma aventura</p>
+          <h2>La plaza cambia mientras avanzas</h2>
+          <p class="lead">Cada nivel presenta un ambiente propio, nuevos obstáculos y un recorrido un poco más desafiante, sin cambiar la historia de las siete aves.</p>
+        </div>
+        <div class="level-gallery">
+          <article class="level-card level-day"><div class="level-info"><span>NIVEL 1</span><h3>Mañana luminosa</h3><p>Aprende el recorrido, reúne suministros y completa los primeros rescates.</p></div></article>
+          <article class="level-card level-sunset"><div class="level-info"><span>NIVEL 2</span><h3>Tarde amazónica</h3><p>Aparecen más plataformas, gatos guardianes y obstáculos combinados.</p></div></article>
+          <article class="level-card level-night"><div class="level-info"><span>NIVEL 3</span><h3>Noche en Iquitos</h3><p>El tramo final reúne todos los desafíos antes del arco de meta.</p></div></article>
+        </div>
+        <div class="game-features" aria-label="Características del juego">
+          <div class="game-feature"><strong>Personaje 3D</strong><small>Camina, corre, ayuda y celebra con animaciones fluidas.</small></div>
+          <div class="game-feature"><strong>Doble salto</strong><small>Supera troncos, ramas, huecos y plataformas elevadas.</small></div>
+          <div class="game-feature"><strong>5 vidas</strong><small>Encuentra un corazón adicional en cada nivel del recorrido.</small></div>
+          <div class="game-feature"><strong>Meta por nivel</strong><small>Completa las misiones y cruza el arco para continuar.</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="wrap">
+        <div class="final-card">
+          <div><p class="kicker">¿Lista para ayudar?</p><h2>Cada ave rescatada es una nueva historia en el cielo.</h2><p>Recorre los tres niveles, aprovecha el doble salto y devuelve las siete aves a un lugar seguro.</p></div>
+          <a class="btn btn-primary" href="juego.html"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5Z"/></svg>Jugar ahora</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer wrap"><div><strong>Alas de Esperanza</strong><br>Una aventura educativa de rescate animal en Iquitos.</div><a href="#inicio">Volver al inicio ↑</a></div>
+  </footer>
+
+  <script>
+    const menu = document.querySelector('.menu');
+    const navLinks = document.getElementById('navLinks');
+
+    menu.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      menu.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      menu.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-label', 'Abrir menú');
+    }));
+
+  </script>
+</body>
+</html>
